@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <script src="http://code.jquery.com/jquery-latest.js" type="text/javascript"></script>
+        <script src="../lib/bigdecimal.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="http://code.jquery.com/qunit/git/qunit.css" type="text/css" media="screen" />
+        <script type="text/javascript" src="http://code.jquery.com/qunit/git/qunit.js"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                test('Class BigDecimal exists', function () {
+                    ok(BigDecimal != undefined);
+                });
+
+                module('toString()');
+
+                test('Zero', function () {
+                    equals('0.0', new BigDecimal('0.0').toString(), 'Value: 0.0');
+                    equals('0.0', new BigDecimal('.0').toString(), 'Value: .0');
+                    equals('0.0', new BigDecimal('0.').toString(), 'Value: 0.');
+                    equals('0.0', new BigDecimal('0').toString(), 'Value: 0');
+                });
+
+                test('One', function () {
+                    equals('1.0', new BigDecimal('1.0').toString(), 'Value: 1.0');
+                    equals('1.0', new BigDecimal('1.00').toString(), 'Value: 1.00');
+                    equals('1.0', new BigDecimal('1').toString(), 'Value: 1');
+                });
+
+                test('Negative', function () {
+                    equal('-1.0', new BigDecimal('-1.0').toString(), 'Value: -1.0');
+                });
+
+                module('Negate');
+
+                test('Negate', function () {
+                    equals('-1.0', new BigDecimal('1.0').negate().toString(), 'Negate 1.0');
+                    equals('1.0', new BigDecimal('-1.0').negate().toString(), 'Negate -1.0');
+                    equals('0.0', new BigDecimal('0.0').negate().toString(), 'Negate 0.0');
+                });
+
+                module('Zero');
+
+                test('Zero testing', function () {
+                    ok(new BigDecimal('0.0').isZero(), '0 isZero?');
+                    ok(! new BigDecimal('1.0').isZero(), '1 not isZero?');
+                });
+
+                module('Add');
+
+                test('+ zero', function () {
+                    equals('1.0', new BigDecimal('1.0').add('0').toString(), "Add '0'");
+                    equals('1.0', new BigDecimal('1.0').add(0).toString(), "Add 0");
+                    equals('1.0', new BigDecimal('1.0').add(new BigDecimal('0')).toString(), "Add BigDecimal 0");
+                });
+
+                test('zero + num', function () {
+                    equals('1.0', new BigDecimal('0').add('1').toString(), "Add '1'");
+                    equals('1.0', new BigDecimal('0').add(1).toString(), "Add 1");
+                    equals('1.0', new BigDecimal('0').add(new BigDecimal('1')).toString(), "Add BigDecimal 1");
+                    equals('-1.0', new BigDecimal('0').add('-1').toString(), "Add '-1'");
+                    equals('-1.0', new BigDecimal('0').add(-1).toString(), "Add -1");
+                    equals('-1.0', new BigDecimal('0').add(new BigDecimal('-1')).toString(), "Add BigDecimal -1");
+                });
+
+                test ('num + num', function () {
+                    equal('2.0', new BigDecimal('1.0').add('1.0').toString(), '1 + 1');
+                    equal('0.2', new BigDecimal('0.1').add('0.1').toString(), '0.1 + 0.1');
+                    equal('1.1', new BigDecimal('1.0').add('0.1').toString(), '1.0 + 0.1');
+                    equal('1.1', new BigDecimal('0.1').add('1.0').toString(), '0.1 + 1.0');
+                    equal('10.1', new BigDecimal('0.1').add('10.0').toString(), '0.1 + 10.0');
+                    equal('110.0', new BigDecimal('101').add('9').toString(), 'Overflow: 101 + 9');
+                    equal('100.0', new BigDecimal('99').add('1').toString(), 'Overflow: 99 + 1');
+                    equal('1000.1', new BigDecimal('999.1').add('1').toString(), 'Overflow: 999.1+ 1');
+                    equal('1.0', new BigDecimal('0.999').add('0.001').toString(), 'Overflow: 0.999+ 0.001');
+                    equal(new BigDecimal('0.999').add('0.001').toString(), '1.0', '0.999 + 0.001');
+                });
+
+                test ('-num + -num', function () {
+                    equal('-2.0', new BigDecimal('-1.0').add('-1.0').toString(), '-1 + -1');
+                    equal('-0.2', new BigDecimal('-0.1').add('-0.1').toString(), '-0.1 + -0.1');
+                    equal('-1.1', new BigDecimal('-1.0').add('-0.1').toString(), '-1.0 + -0.1');
+                    equal('-1.1', new BigDecimal('-0.1').add('-1.0').toString(), '-0.1 + -1.0');
+                    equal('-10.1', new BigDecimal('-0.1').add('-10.0').toString(), '-0.1 + -10.0');
+                    equal('-110.0', new BigDecimal('-101').add('-9').toString(), 'Overflow: -101 + -9');
+                    equal('-100.0', new BigDecimal('-99').add('-1').toString(), 'Overflow: -99 + -1');
+                    equal('-1000.1', new BigDecimal('-999.1').add('-1').toString(), 'Overflow: -999.1+ -1');
+                });
+
+                test('num + -num', function () {
+                    equal(new BigDecimal('10.0').add('-5').toString(), '5.0', '10 + -5');
+                    equal(new BigDecimal('5.0').add('-10').toString(), '-5.0', '5 + -10');
+                    equal(new BigDecimal('1.0').add('-0.001').toString(), '0.999', '1.0 + -0.001');
+                    equal(new BigDecimal('1.01').add('-10.1').toString(), '-9.09', '1.01 + -10.1')
+                });
+
+                module('Lower Than ignore case');
+
+                test('lowerThanIgnoreCase', function () {
+                    ok(new BigDecimal('1.0').lowerThanIgnoreCase(new BigDecimal('2.0')), '1.0 < 2.0');
+                    ok(new BigDecimal('-1.0').lowerThanIgnoreCase(new BigDecimal('2.0')), '-1.0 < 2.0');
+                    ok(! new BigDecimal('2.0').lowerThanIgnoreCase(new BigDecimal('1.0')), '! 2.0 < 1.0');
+                    ok(new BigDecimal('0.1').lowerThanIgnoreCase(new BigDecimal('0.2')), '0.1 < 0.2');
+                    ok(! new BigDecimal('10').lowerThanIgnoreCase(new BigDecimal('1')), '! 10 < 1');
+                    ok(new BigDecimal('1').lowerThanIgnoreCase(new BigDecimal('10')), '1 < 10');
+                    ok(! new BigDecimal('0.1').lowerThanIgnoreCase(new BigDecimal('0.01')), '! 0.1 < 0.01');
+                    ok(new BigDecimal('0.01').lowerThanIgnoreCase(new BigDecimal('0.1')), '0.01 < 0.1');
+                    ok(new BigDecimal('-0.01').lowerThanIgnoreCase(new BigDecimal('0.1')), '-0.01 < 0.1');
+                });
+
+                module('zerosBefore');
+
+                test('Zeros Before 0', function () {
+                    var zero = new BigDecimal('0');
+                    for (var i = 0; i < 24; i++) {
+                        ok(zero.zerosBefore(i), '0 always true');
+                    }
+                });
+
+                test('Zeros Before 1 with 11 zeros', function () {
+                    var num = new BigDecimal('100000000000');
+
+                    for (var i = 0; i < 24; i++) {
+                        ok(! num.zerosBefore(i), 'always false');
+                    }
+                });
+
+                test('Zeros for number 1', function () {
+                    var one = new BigDecimal('1');
+                    for (var i = 0; i < 10; i++) {
+                        ok(one.zerosBefore(i), 'True before 11');
+                    }
+                    for (var i = 11; i < 24; i++) {
+                        ok(! one.zerosBefore(i), 'False after 11');
+                    }
+                });
+
+                test('Zeros for number 0.01', function () {
+                    var num = new BigDecimal('0.01');
+                    for (var i = 0; i < 14; i++) {
+                        ok(num.zerosBefore(i), 'True before 14 [' + i + ']');
+                    }
+                    for (var i = 14; i < 24; i++) {
+                        ok(! num.zerosBefore(i), 'False after 14 [' + i + ']');
+                    }
+                });
+
+                module('Subtract');
+
+                test('num - num', function () {
+                    equal(new BigDecimal('1.0').subtract('1.0').toString(), '0.0', '1.0 - "1.0"');
+                    equal(new BigDecimal('1.0').subtract(1.0).toString(), '0.0', '1.0 - 1.0');
+                    equal(new BigDecimal('1.0').subtract(new BigDecimal('1.0')).toString(), '0.0', '1.0 - BigDecimal 1.0');
+                });
+
+                module('isOne');
+
+                test('isOne', function () {
+                    ok(! new BigDecimal('2.0').isOne(), '! 2.0 isOne');
+                    ok(new BigDecimal('1.0').isOne(), '1.0 isOne');
+                });
+
+                module('Multiply');
+
+                test('num * 1', function () {
+                    equal(new BigDecimal('5.0').multiply('1.0').toString(), '5.0', '5.0 * "1.0"');
+                    equal(new BigDecimal('5.0').multiply(1.0).toString(), '5.0', '5.0 * 1.0');
+                    equal(new BigDecimal('5.0').multiply(new BigDecimal('1.0')).toString(), '5.0', '5.0 * BigDecimal(1.0)');
+                    equal(new BigDecimal('1.0').multiply('5.0').toString(), '5.0', '1.0 * 5.0');
+                });
+
+                test('num * 0', function () {
+                    equal(new BigDecimal('0.0').multiply(5).toString(), '0.0', '0 * 5');
+                    equal(new BigDecimal('5.0').multiply(0).toString(), '0.0', '5 * 0');
+                });
+
+                test('num * num (integers)', function () {
+                    equal(new BigDecimal('2.0').multiply(2).toString(), '4.0', '2 * 2');
+                    equal(new BigDecimal('2.0').multiply(5).toString(), '10.0', '2 * 5');
+                    equal(new BigDecimal('100.0').multiply(100).toString(), '10000.0', '100 * 100');
+                    equal(new BigDecimal('50.0').multiply(11).toString(), '550.0', '50 * 11');
+                    equal(new BigDecimal('12.0').multiply(12).toString(), '144.0', '12 * 12');
+                });
+
+                test('num * num (fractals)', function () {
+                    equal(new BigDecimal('2.0').multiply('0.1').toString(), '0.2', '2 * 0.1');
+                    equal(new BigDecimal('0.1').multiply('0.1').toString(), '0.01', '0.1* 0.1');
+                    equal(new BigDecimal('0.01').multiply('0.1').toString(), '0.001', '0.01* 0.1');
+                    equal(new BigDecimal('0.02').multiply('0.2').toString(), '0.004', '0.02* 0.2');
+                    equal(new BigDecimal('0.0002').multiply('0.0002').toString(), '0.00000004', '0.0002* 0.0002');
+                });
+
+            });
+        </script>
+
+    </head>
+    <body>
+        <h1 id="qunit-header">BigDecimal tests</h1>
+
+        <h2 id="qunit-banner"></h2>
+
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+        <div id="qunit-fixture">test markup, will be hidden</div>
+    </body>
+</html>
