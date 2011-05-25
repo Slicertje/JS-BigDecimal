@@ -246,6 +246,30 @@
                     equal(new BigDecimal('1000000').divide('0.00000001').toString(), '0.0', '1M*1B');
                 });
 
+                module('comparison');
+
+                test('eq', function () {
+                    ok(new BigDecimal('1').eq(1), '1 = 1');
+                    ok(! new BigDecimal('1').eq(-1), '1 != -1');
+                    ok(new BigDecimal('-1').eq(-1), '-1 = -1');
+                    ok(! new BigDecimal('1').eq(2), '1 != 2');
+                });
+
+                test('lte', function () {
+                    ok(new BigDecimal('1.0').lte('1.0'), ' 1 <= 1');
+                    ok(new BigDecimal('1.0').lte('2.0'), ' 1 <= 2');
+                    ok(! new BigDecimal('2.0').lte('1.0'), 'not 2 <= 1');
+                    ok(! new BigDecimal('10').lte('2'), 'not 10 <= 2');
+                    ok(new BigDecimal('0.01').lte('0.1'), '0.01 <= 0.1');
+                    ok(! new BigDecimal('12').lte('11'), 'not 12 <= 11');
+                    ok(new BigDecimal('11').lte('12'), '11 <= 12');
+
+                    ok(new BigDecimal('-2').lte(1), '-2 <= 1');
+                    ok(! new BigDecimal('1').lte(-2), 'not 1 <= -2');
+                    ok(! new BigDecimal('-1').lte(-2), 'not -1 <= -2');
+                    ok(new BigDecimal('-10').lte(-2), '-10 <= -2');
+                });
+
             });
         </script>
 
