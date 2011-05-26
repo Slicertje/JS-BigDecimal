@@ -270,6 +270,21 @@
                     ok(new BigDecimal('-10').lte(-2), '-10 <= -2');
                 });
 
+                test('lt', function () {
+                    ok(! new BigDecimal('1.0').lt('1.0'), 'not 1 <= 1');
+                    ok(new BigDecimal('1.0').lt('2.0'), ' 1 <= 2');
+                    ok(! new BigDecimal('2.0').lt('1.0'), 'not 2 <= 1');
+                    ok(! new BigDecimal('10').lt('2'), 'not 10 <= 2');
+                    ok(new BigDecimal('0.01').lt('0.1'), '0.01 <= 0.1');
+                    ok(! new BigDecimal('12').lt('11'), 'not 12 <= 11');
+                    ok(new BigDecimal('11').lt('12'), '11 <= 12');
+
+                    ok(new BigDecimal('-2').lt(1), '-2 <= 1');
+                    ok(! new BigDecimal('1').lt(-2), 'not 1 <= -2');
+                    ok(! new BigDecimal('-1').lt(-2), 'not -1 <= -2');
+                    ok(new BigDecimal('-10').lt(-2), '-10 <= -2');
+                });
+
             });
         </script>
 
