@@ -32,6 +32,12 @@
                     equal('-1.0', new BigDecimal('-1.0').toString(), 'Value: -1.0');
                 });
 
+                test('Overflow', function () {
+                    equal(24, new BigDecimal('2.950500000000002').digits.length, 'Overflow');
+                    equal(24, new BigDecimal('950500000000002950500000000002').digits.length, 'Overflow');
+                    equal('500000000002.0', new BigDecimal('950500000000002950500000000002').toString(), 'Overflow');
+                });
+
                 module('Negate');
 
                 test('Negate', function () {
