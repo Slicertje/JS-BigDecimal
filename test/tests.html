@@ -295,6 +295,37 @@
                     ok(new BigDecimal('-10').lt(-2), '-10 < -2');
                 });
 
+                test('gte', function () {
+                    ok(new BigDecimal('1.0').gte('1.0'), ' 1 >= 1');
+                    ok(! new BigDecimal('1.0').gte('2.0'), 'not 1 >= 2');
+                    ok(new BigDecimal('2.0').gte('1.0'), '2 >= 1');
+                    ok(new BigDecimal('10').gte('2'), '10 >= 2');
+                    ok(! new BigDecimal('0.01').gte('0.1'), 'not 0.01 >= 0.1');
+                    ok(new BigDecimal('12').gte('11'), '12 >= 11');
+                    ok(! new BigDecimal('11').gte('12'), 'not 11 >= 12');
+
+                    ok(! new BigDecimal('-2').gte(1), 'not -2 >= 1');
+                    ok(new BigDecimal('1').gte(-2), '1 >= -2');
+                    ok(new BigDecimal('-1').gte(-2), '-1 >= -2');
+                    ok(! new BigDecimal('-10').gte(-2), 'not -10 >= -2');
+                });
+
+
+                test('gt', function () {
+                    ok(! new BigDecimal('1.0').gt('1.0'), 'not 1 > 1');
+                    ok(! new BigDecimal('1.0').gt('2.0'), 'not 1 > 2');
+                    ok(new BigDecimal('2.0').gt('1.0'), '2 > 1');
+                    ok(new BigDecimal('10').gt('2'), '10 > 2');
+                    ok(! new BigDecimal('0.01').gt('0.1'), 'not 0.01 > 0.1');
+                    ok(new BigDecimal('12').gt('11'), '12 > 11');
+                    ok(! new BigDecimal('11').gt('12'), 'not 11 > 12');
+
+                    ok(! new BigDecimal('-2').gt(1), 'not -2 > 1');
+                    ok(new BigDecimal('1').gt(-2), '1 > -2');
+                    ok(new BigDecimal('-1').gt(-2), '-1 > -2');
+                    ok(! new BigDecimal('-10').gt(-2), 'not -10 > -2');
+                });
+
             });
         </script>
 
