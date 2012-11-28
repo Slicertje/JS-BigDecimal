@@ -16,16 +16,16 @@
                 module('toString()');
 
                 test('Zero', function () {
-                    equals('0.0', new BigDecimal('0.0').toString(), 'Value: 0.0');
-                    equals('0.0', new BigDecimal('.0').toString(), 'Value: .0');
-                    equals('0.0', new BigDecimal('0.').toString(), 'Value: 0.');
-                    equals('0.0', new BigDecimal('0').toString(), 'Value: 0');
+                    equal('0.0', new BigDecimal('0.0').toString(), 'Value: 0.0');
+                    equal('0.0', new BigDecimal('.0').toString(), 'Value: .0');
+                    equal('0.0', new BigDecimal('0.').toString(), 'Value: 0.');
+                    equal('0.0', new BigDecimal('0').toString(), 'Value: 0');
                 });
 
                 test('One', function () {
-                    equals('1.0', new BigDecimal('1.0').toString(), 'Value: 1.0');
-                    equals('1.0', new BigDecimal('1.00').toString(), 'Value: 1.00');
-                    equals('1.0', new BigDecimal('1').toString(), 'Value: 1');
+                    equal('1.0', new BigDecimal('1.0').toString(), 'Value: 1.0');
+                    equal('1.0', new BigDecimal('1.00').toString(), 'Value: 1.00');
+                    equal('1.0', new BigDecimal('1').toString(), 'Value: 1');
                 });
 
                 test('Negative', function () {
@@ -41,9 +41,9 @@
                 module('Negate');
 
                 test('Negate', function () {
-                    equals('-1.0', new BigDecimal('1.0').negate().toString(), 'Negate 1.0');
-                    equals('1.0', new BigDecimal('-1.0').negate().toString(), 'Negate -1.0');
-                    equals('0.0', new BigDecimal('0.0').negate().toString(), 'Negate 0.0');
+                    equal('-1.0', new BigDecimal('1.0').negate().toString(), 'Negate 1.0');
+                    equal('1.0', new BigDecimal('-1.0').negate().toString(), 'Negate -1.0');
+                    equal('0.0', new BigDecimal('0.0').negate().toString(), 'Negate 0.0');
                 });
 
                 module('Zero');
@@ -56,18 +56,18 @@
                 module('Add');
 
                 test('+ zero', function () {
-                    equals('1.0', new BigDecimal('1.0').add('0').toString(), "Add '0'");
-                    equals('1.0', new BigDecimal('1.0').add(0).toString(), "Add 0");
-                    equals('1.0', new BigDecimal('1.0').add(new BigDecimal('0')).toString(), "Add BigDecimal 0");
+                    equal('1.0', new BigDecimal('1.0').add('0').toString(), "Add '0'");
+                    equal('1.0', new BigDecimal('1.0').add(0).toString(), "Add 0");
+                    equal('1.0', new BigDecimal('1.0').add(new BigDecimal('0')).toString(), "Add BigDecimal 0");
                 });
 
                 test('zero + num', function () {
-                    equals('1.0', new BigDecimal('0').add('1').toString(), "Add '1'");
-                    equals('1.0', new BigDecimal('0').add(1).toString(), "Add 1");
-                    equals('1.0', new BigDecimal('0').add(new BigDecimal('1')).toString(), "Add BigDecimal 1");
-                    equals('-1.0', new BigDecimal('0').add('-1').toString(), "Add '-1'");
-                    equals('-1.0', new BigDecimal('0').add(-1).toString(), "Add -1");
-                    equals('-1.0', new BigDecimal('0').add(new BigDecimal('-1')).toString(), "Add BigDecimal -1");
+                    equal('1.0', new BigDecimal('0').add('1').toString(), "Add '1'");
+                    equal('1.0', new BigDecimal('0').add(1).toString(), "Add 1");
+                    equal('1.0', new BigDecimal('0').add(new BigDecimal('1')).toString(), "Add BigDecimal 1");
+                    equal('-1.0', new BigDecimal('0').add('-1').toString(), "Add '-1'");
+                    equal('-1.0', new BigDecimal('0').add(-1).toString(), "Add -1");
+                    equal('-1.0', new BigDecimal('0').add(new BigDecimal('-1')).toString(), "Add BigDecimal -1");
                 });
 
                 test ('num + num', function () {
@@ -249,7 +249,11 @@
                 });
 
                 test ('overflow', function () {
-                    equal(new BigDecimal('1000000').divide('0.00000001').toString(), '0.0', '1M*1B');
+                    equal(new BigDecimal('1000000').divide('0.00000001').toString(), '0.0', '1000000/0.00000001');
+                });
+
+                test('big divider with decimals', function () {
+                    equal(new BigDecimal('1523655').divide('26879.45').toString(), '56.684753594288', '1523655/26879.45')
                 });
 
                 module('comparison');
@@ -277,18 +281,18 @@
                 });
 
                 test('lt', function () {
-                    ok(! new BigDecimal('1.0').lt('1.0'), 'not 1 <= 1');
-                    ok(new BigDecimal('1.0').lt('2.0'), ' 1 <= 2');
-                    ok(! new BigDecimal('2.0').lt('1.0'), 'not 2 <= 1');
-                    ok(! new BigDecimal('10').lt('2'), 'not 10 <= 2');
-                    ok(new BigDecimal('0.01').lt('0.1'), '0.01 <= 0.1');
-                    ok(! new BigDecimal('12').lt('11'), 'not 12 <= 11');
-                    ok(new BigDecimal('11').lt('12'), '11 <= 12');
+                    ok(! new BigDecimal('1.0').lt('1.0'), 'not 1 < 1');
+                    ok(new BigDecimal('1.0').lt('2.0'), ' 1 < 2');
+                    ok(! new BigDecimal('2.0').lt('1.0'), 'not 2 < 1');
+                    ok(! new BigDecimal('10').lt('2'), 'not 10 < 2');
+                    ok(new BigDecimal('0.01').lt('0.1'), '0.01 < 0.1');
+                    ok(! new BigDecimal('12').lt('11'), 'not 12 < 11');
+                    ok(new BigDecimal('11').lt('12'), '11 < 12');
 
-                    ok(new BigDecimal('-2').lt(1), '-2 <= 1');
-                    ok(! new BigDecimal('1').lt(-2), 'not 1 <= -2');
-                    ok(! new BigDecimal('-1').lt(-2), 'not -1 <= -2');
-                    ok(new BigDecimal('-10').lt(-2), '-10 <= -2');
+                    ok(new BigDecimal('-2').lt(1), '-2 < 1');
+                    ok(! new BigDecimal('1').lt(-2), 'not 1 < -2');
+                    ok(! new BigDecimal('-1').lt(-2), 'not -1 < -2');
+                    ok(new BigDecimal('-10').lt(-2), '-10 < -2');
                 });
 
             });
